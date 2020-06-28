@@ -30,7 +30,7 @@ body {
 .container {
   margin: 0 auto;
   max-width: 1200px;
-  padding: 5px;
+  padding: 15px;
   box-sizing: border-box;
   overflow: auto;
 }

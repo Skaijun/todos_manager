@@ -10,11 +10,29 @@ const state = {
 
 const getters = {
   todoList: (state) => state.todos,
+  todoListLength: (state) => state.todos.length,
 };
 
-const actions = {};
+const actions = {
+  addNewTask({ commit }, newTodo) {
+    commit("addTodo", newTodo);
+  },
+  completeTask({ commit }, updTodo) {
+    commit("completeTheTask", updTodo);
+  },
+};
 
-const mutations = {};
+const mutations = {
+  completeTheTask(state, updTodo) {
+    const indexOfUdpTodo = state.todos.findIndex(
+      (todo) => todo.id === updTodo.id
+    );
+    state.todos.splice(indexOfUdpTodo, 1, updTodo);
+  },
+  addTodo(state, newTodo) {
+    state.todos.unshift(newTodo);
+  },
+};
 
 export default {
   state,

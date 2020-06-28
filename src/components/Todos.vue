@@ -11,16 +11,39 @@
       </div>
     </div>
     <div class="todos__wrap">
-      <div v-for="todo in todoList" :key="todo.id" class="todo">{{ todo.title }}</div>
+      <div
+        @dblclick="completeCurrTask(todo)"
+        v-for="todo in todoList"
+        :key="todo.id"
+        class="todo"
+        :class="{completed: todo.isCompleted}"
+      >{{ todo.title }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
+  data() {
+    return {
+      isCompleted: false
+    };
+  },
   computed: {
     ...mapGetters(["todoList"])
+  },
+  methods: {
+    ...mapActions(["completeTask"]),
+    completeCurrTask(task) {
+      const updTask = {
+        id: task.id,
+        title: task.title,
+        isCompleted: !task.isCompleted
+      };
+
+      this.completeTask(updTask);
+    }
   }
 };
 </script>
@@ -43,13 +66,14 @@ export default {
   margin-right: 5px;
   padding: 0 5px;
   border-radius: 3px;
+  opacity: 0.8;
 }
 .square.incomplete {
-  background-color: teal;
+  background-color: #41b883;
   color: transparent;
 }
 .square.complete {
-  background-color: rgb(3, 22, 3);
+  background-color: rgb(27, 49, 27);
   color: transparent;
 }
 .todos__wrap {
@@ -64,14 +88,21 @@ export default {
   text-align: center;
   position: relative;
   cursor: pointer;
-  transition: all 0.8s ease-in-out;
+  transition: all 0.5s ease-in-out;
   font-family: "Raleway", sans-serif;
   font-size: 18px;
   line-height: 22px;
   border-radius: 10px;
+  opacity: 0.8;
+  animation: flash;
+  animation-duration: 1s;
+}
+.todo.completed {
+  background-color: rgb(27, 49, 27);
+  color: white;
 }
 .todo:hover {
-  background-color: #35a171;
+  opacity: 1;
 }
 @media (max-width: 1100px) {
   .todos__wrap {

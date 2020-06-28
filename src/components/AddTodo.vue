@@ -2,14 +2,33 @@
   <div>
     <h3>Add Todo</h3>
     <form class="form">
-      <input class="form-input" type="text" placeholder="Add todo..."/>
-      <input class="form-submit" type="submit" value="Submit" />
+      <input v-model="newTodo" class="form-input" type="text" placeholder="Add todo..." />
+      <input @click.prevent="addTodo" class="form-submit" type="submit" value="Submit" />
     </form>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapActions, mapGetters } from "vuex";
+export default {
+  data: () => {
+    newTodo: "";
+  },
+  computed: {
+    ...mapGetters(["todoListLength"])
+  },
+  methods: {
+    ...mapActions(["addNewTask"]),
+    addTodo() {
+      const todo = {
+        id: this.todoListLength + 1,
+        title: this.newTodo,
+        isCompleted: false
+      };
+      console.log(todo);
+    }
+  }
+};
 </script>
 
 <style scoped>
@@ -39,13 +58,18 @@ export default {};
   cursor: pointer;
   font-size: 16px;
   line-height: 20px;
+  opacity: 0.8;
+  transition: all 0.3s ease-out;
+}
+.form-submit:hover {
+  opacity: 1;
 }
 @media (max-width: 600px) {
   .form {
     flex-direction: column;
   }
   .form-input {
-      flex: 2rem;
+    flex: 2rem;
   }
 }
 </style>
