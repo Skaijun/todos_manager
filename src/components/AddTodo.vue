@@ -9,23 +9,33 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
-  data: () => {
-    newTodo: "";
-  },
-  computed: {
-    ...mapGetters(["todoListLength"])
+  name: "AddTodos",
+  data() {
+    return {
+      newTodo: ""
+    };
   },
   methods: {
     ...mapActions(["addNewTask"]),
     addTodo() {
-      const todo = {
-        id: this.todoListLength + 1,
-        title: this.newTodo,
-        isCompleted: false
-      };
-      console.log(todo);
+      const newDate = new Date();
+      const id = `${newDate.getFullYear()}-${newDate.getMonth() +
+        1}-${newDate.getDate()}-${newDate.getHours()}-${newDate.getMinutes()}-${newDate.getSeconds()}-${newDate.getMilliseconds()}`;
+
+      if (this.newTodo) {
+        const todo = {
+          id: id,
+          title: this.newTodo,
+          isCompleted: false,
+          isDisplayed: true
+        };
+        this.addNewTask(todo);
+        this.newTodo = "";
+      } else {
+        alert("You have to enter the task first!");
+      }
     }
   }
 };
@@ -44,6 +54,7 @@ export default {
   font-size: 20px;
   line-height: 24px;
   font-weight: 400;
+  border: 0.5px solid teal;
 }
 .form-input:focus {
   background-color: rgb(234, 241, 232);

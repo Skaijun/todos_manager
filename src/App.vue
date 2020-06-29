@@ -15,6 +15,9 @@ import FilterTodos from "./components/FilterTodos.vue";
 
 export default {
   name: "TodoApp",
+  created() {
+    this.$store.dispatch("initTodos");
+  },
   components: {
     Todos,
     AddTodo,

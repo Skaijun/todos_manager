@@ -2,12 +2,12 @@
   <div>
     <h3>Todos</h3>
     <div class="hint">
-      <p>Double click to mark as complete</p>
+      <p>Double click to mark as completed</p>
       <div>
-        <span class="square incomplete">0</span>= Incomplete
+        <span class="square incomplete">_</span>= Incompleted
       </div>
       <div>
-        <span class="square complete">0</span>= Complete
+        <span class="square complete">_</span>= Completed
       </div>
     </div>
     <div class="todos__wrap">
@@ -16,8 +16,11 @@
         v-for="todo in todoList"
         :key="todo.id"
         class="todo"
-        :class="{completed: todo.isCompleted}"
-      >{{ todo.title }}</div>
+        :class="{completed: todo.isCompleted, invisible: !todo.isDisplayed}"
+      >
+        {{ todo.title }}
+        <i @click="deleteTodo(todo.id)" class="fas fa-trash-alt"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -25,6 +28,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
+  name: "Todos",
   data() {
     return {
       isCompleted: false
@@ -34,15 +38,18 @@ export default {
     ...mapGetters(["todoList"])
   },
   methods: {
-    ...mapActions(["completeTask"]),
+    ...mapActions(["updateTaskState", "removeTask"]),
     completeCurrTask(task) {
       const updTask = {
         id: task.id,
         title: task.title,
-        isCompleted: !task.isCompleted
+        isCompleted: !task.isCompleted,
+        isDisplayed: true
       };
-
-      this.completeTask(updTask);
+      this.updateTaskState(updTask);
+    },
+    deleteTodo(todoId) {
+      this.removeTask(todoId);
     }
   }
 };
@@ -60,11 +67,10 @@ export default {
   line-height: 24px;
 }
 .square {
-  min-width: 10px;
+  width: 10px;
   height: 10px;
-  background-size: cover;
   margin-right: 5px;
-  padding: 0 5px;
+  padding: 0 6px;
   border-radius: 3px;
   opacity: 0.8;
 }
@@ -84,7 +90,7 @@ export default {
 .todo {
   border: 1px solid #ccc;
   background: #41b883;
-  padding: 1rem;
+  padding: 1.3rem;
   text-align: center;
   position: relative;
   cursor: pointer;
@@ -94,8 +100,9 @@ export default {
   line-height: 22px;
   border-radius: 10px;
   opacity: 0.8;
-  animation: flash;
+  animation: shakeX;
   animation-duration: 1s;
+  word-break: break-all;
 }
 .todo.completed {
   background-color: rgb(27, 49, 27);
@@ -103,6 +110,17 @@ export default {
 }
 .todo:hover {
   opacity: 1;
+}
+.fas.fa-trash-alt {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+.fas.fa-trash-alt:hover {
+  color: tomato;
+}
+.invisible {
+  display: none;
 }
 @media (max-width: 1100px) {
   .todos__wrap {
